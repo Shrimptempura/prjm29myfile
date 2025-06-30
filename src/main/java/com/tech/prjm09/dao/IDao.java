@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.tech.prjm09.dto.BDto;
+import com.tech.prjm09.dto.ReBrdimgDto;
 
 @Mapper
 public interface IDao {
@@ -16,6 +17,8 @@ public interface IDao {
 	int selBid();	// max
 	
 	void imgwrite(int bid, String originalFile, String changeFile);
+	
+	ArrayList<ReBrdimgDto> selectImg(String bid);
 	
 	BDto contentView(String sbid);
 	BDto modifyView(String sbid);

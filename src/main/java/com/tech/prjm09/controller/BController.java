@@ -1,6 +1,7 @@
 package com.tech.prjm09.controller;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.tech.prjm09.dao.IDao;
 import com.tech.prjm09.dto.BDto;
+import com.tech.prjm09.dto.ReBrdimgDto;
 import com.tech.prjm09.util.SearchVO;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -204,6 +206,9 @@ public class BController {
 		BDto dto = iDao.contentView(bid);
 		model.addAttribute("content_view", dto);
 		
+		// 첨부파일 저장용 dto
+		ArrayList<ReBrdimgDto> imgList = iDao.selectImg(bid);
+		model.addAttribute("imgList", imgList);
 		
 		return "content_view";
 	}

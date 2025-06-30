@@ -76,6 +76,10 @@
 	<insert id="imgwrite">
 		INSERT INTO REBRDIMGTB VALUES(REBRDIMGTB_SEQ.NEXTVAL, #{param1}, #{param2}, #{param3})
 	</insert>
+	
+	<select id="selectImg" resultType="com.tech.prjm09.dto.ReBrdimgDto">
+		SELECT * FROM REBRDIMGTB WHERE BID = #{param1}
+	</select>
 
 	<select id="contentView" resultType="com.tech.prjm09.dto.BDto">
 		SELECT BID, BNAME, BTITLE,
