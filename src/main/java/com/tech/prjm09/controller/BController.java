@@ -1,14 +1,21 @@
 package com.tech.prjm09.controller;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.tech.prjm09.dao.IDao;
 import com.tech.prjm09.dto.BDto;
+import com.tech.prjm09.dto.ReBrdimgDto;
 import com.tech.prjm09.util.SearchVO;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -32,8 +39,6 @@ public class BController {
 	@RequestMapping("list")
 	public String list(HttpServletRequest request, SearchVO searchVO, Model model) {
 		System.out.println("list() ctr");
-//		command = new BListCommand();
-//		command.execute(model);
 		// searching
 		String btitle = "";
 		String bcontent = "";
@@ -144,18 +149,46 @@ public class BController {
 	}
 	
 	@RequestMapping("write")
-	public String write(HttpServletRequest request, Model model) {
+	public String write(MultipartHttpServletRequest mtfRequest, Model model) {
 		System.out.println("write() ctr");
-		
-		// db에 글쓰기 동작
-//		model.addAttribute("request", request);
-//		command = new BWriteCommand();
-//		command.execute(model);
-		
-		String bname = request.getParameter("bname");
-		String btitle = request.getParameter("btitle");
-		String bcontent = request.getParameter("bcontent");
+		String bname = mtfRequest.getParameter("bname");
+		String btitle = mtfRequest.getParameter("btitle");
+		String bcontent = mtfRequest.getParameter("bcontent");
 		iDao.write(bname, btitle, bcontent);
+		
+		// 경로 지정
+		String workPath = System.getProperty("user.dir");
+		String root = workPath + "\\src\\main\\resources\\static\\files";
+		System.out.println(workPath);
+		
+		// 여러개올수 있으니 List
+		List<MultipartFile> fileList = mtfRequest.getFiles("file");
+		
+		int bid = iDao.selBid();
+		System.out.println("bid>>>>>" + bid);
+		
+		for (MultipartFile mf : fileList) {
+			String originalFile = mf.getOriginalFilename();
+			System.out.println("files: " + originalFile);
+			long longtime = System.currentTimeMillis();
+			
+			String changeFile = longtime + "_" + originalFile;
+			System.out.println("change files: " + changeFile);
+			
+			String pathfile = root + "\\" + changeFile;
+			try {
+				if (!originalFile.equals("")) {
+					mf.transferTo(new File(pathfile));
+					System.out.println("upload success");
+					
+					// db기록
+					iDao.imgwrite(bid, originalFile, changeFile);
+					System.out.println("rebrdimgtb write success");
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 		
 		return "redirect:list";
 	}
@@ -173,6 +206,9 @@ public class BController {
 		BDto dto = iDao.contentView(bid);
 		model.addAttribute("content_view", dto);
 		
+		// 첨부파일 저장용 dto
+		ArrayList<ReBrdimgDto> imgList = iDao.selectImg(bid);
+		model.addAttribute("imgList", imgList);
 		
 		return "content_view";
 	}
