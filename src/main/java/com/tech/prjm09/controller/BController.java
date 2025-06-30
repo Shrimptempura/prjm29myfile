@@ -1,11 +1,15 @@
 package com.tech.prjm09.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.tech.prjm09.dao.IDao;
 import com.tech.prjm09.dto.BDto;
@@ -142,19 +146,23 @@ public class BController {
 	}
 	
 	@RequestMapping("write")
-	public String write(HttpServletRequest request, Model model) {
+	public String write(MultipartHttpServletRequest mtfRequest, Model model) {
 		System.out.println("write() ctr");
-		String bname = request.getParameter("bname");
-		String btitle = request.getParameter("btitle");
-		String bcontent = request.getParameter("bcontent");
+		String bname = mtfRequest.getParameter("bname");
+		String btitle = mtfRequest.getParameter("btitle");
+		String bcontent = mtfRequest.getParameter("bcontent");
 		iDao.write(bname, btitle, bcontent);
 		
 		// 경로 지정
 		String workPath = System.getProperty("user.dir");
 		String rootString = workPath + "\\src\\main\\resources\\static\\files";
-		
 		System.out.println(workPath);
 		
+		// 여러개올수 있으니 List
+		List<MultipartFile> fileList = mtfRequest.getFiles("file");
+		
+		int bid = iDao.selBid();
+		System.out.println("bid>>>>>" + bid);
 		
 		return "redirect:list";
 	}

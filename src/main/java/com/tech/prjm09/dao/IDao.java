@@ -12,6 +12,9 @@ public interface IDao {
 //	ArrayList<BDto> list(int start, int end);
 	ArrayList<BDto> list(int start, int end, String sk, String selNum);
 	void write(String bname, String btitle, String bcontent);
+	
+	int selBid();	// max
+	
 	BDto contentView(String sbid);
 	BDto modifyView(String sbid);
 	void modify(String bid, String bname, String btitle, String bcontent);

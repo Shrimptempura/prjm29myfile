@@ -60,6 +60,10 @@
 		SELECT COUNT(*) FROM REPLYBOARD
 		<include refid="includeCount" />
 	</select>
+	
+	<select id="selBid" resultType="Integer">
+		SELECT MAX(BID) FROM REPLYBOARD
+	</select>
 
 	<insert id="write">
 		INSERT INTO REPLYBOARD(BID, BNAME, BTITLE, BCONTENT,
