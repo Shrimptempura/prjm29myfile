@@ -61,16 +61,20 @@
 		<include refid="includeCount" />
 	</select>
 	
-	<select id="selBid" resultType="Integer">
-		SELECT MAX(BID) FROM REPLYBOARD
-	</select>
-
 	<insert id="write">
 		INSERT INTO REPLYBOARD(BID, BNAME, BTITLE, BCONTENT,
 		BDATE, BHIT, BGROUP, BSTEP, BINDENT)
 		VALUES(REPLYBOARD_SEQ.NEXTVAL,
 		#{param1}, #{param2}, #{param3}, SYSDATE, 0, REPLYBOARD_SEQ.CURRVAL,
 		0, 0)
+	</insert>
+	
+	<select id="selBid" resultType="Integer">
+		SELECT MAX(BID) FROM REPLYBOARD
+	</select>
+	
+	<insert id="imgwrite">
+		INSERT INTO REBRDIMGTB VALUES(REBRDIMGTB_SEQ.NEXTVAL, #{param1}, #{param2}, #{param3})
 	</insert>
 
 	<select id="contentView" resultType="com.tech.prjm09.dto.BDto">

@@ -180,6 +180,8 @@ public class BController {
 					System.out.println("upload success");
 					
 					// db기록
+					iDao.imgwrite(bid, originalFile, changeFile);
+					System.out.println("rebrdimgtb write success");
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
