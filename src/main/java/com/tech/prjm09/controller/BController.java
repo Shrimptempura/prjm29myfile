@@ -1,5 +1,6 @@
 package com.tech.prjm09.controller;
 
+import java.io.File;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -155,7 +156,7 @@ public class BController {
 		
 		// 경로 지정
 		String workPath = System.getProperty("user.dir");
-		String rootString = workPath + "\\src\\main\\resources\\static\\files";
+		String root = workPath + "\\src\\main\\resources\\static\\files";
 		System.out.println(workPath);
 		
 		// 여러개올수 있으니 List
@@ -163,6 +164,27 @@ public class BController {
 		
 		int bid = iDao.selBid();
 		System.out.println("bid>>>>>" + bid);
+		
+		for (MultipartFile mf : fileList) {
+			String originalFile = mf.getOriginalFilename();
+			System.out.println("files: " + originalFile);
+			long longtime = System.currentTimeMillis();
+			
+			String changeFile = longtime + "_" + originalFile;
+			System.out.println("change files: " + changeFile);
+			
+			String pathfile = root + "\\" + changeFile;
+			try {
+				if (!originalFile.equals("")) {
+					mf.transferTo(new File(pathfile));
+					System.out.println("upload success");
+					
+					// db기록
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 		
 		return "redirect:list";
 	}
