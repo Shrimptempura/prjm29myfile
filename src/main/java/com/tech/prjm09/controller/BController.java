@@ -32,8 +32,6 @@ public class BController {
 	@RequestMapping("list")
 	public String list(HttpServletRequest request, SearchVO searchVO, Model model) {
 		System.out.println("list() ctr");
-//		command = new BListCommand();
-//		command.execute(model);
 		// searching
 		String btitle = "";
 		String bcontent = "";
@@ -146,16 +144,17 @@ public class BController {
 	@RequestMapping("write")
 	public String write(HttpServletRequest request, Model model) {
 		System.out.println("write() ctr");
-		
-		// db에 글쓰기 동작
-//		model.addAttribute("request", request);
-//		command = new BWriteCommand();
-//		command.execute(model);
-		
 		String bname = request.getParameter("bname");
 		String btitle = request.getParameter("btitle");
 		String bcontent = request.getParameter("bcontent");
 		iDao.write(bname, btitle, bcontent);
+		
+		// 경로 지정
+		String workPath = System.getProperty("user.dir");
+		String rootString = workPath + "\\src\\main\\resources\\static\\files";
+		
+		System.out.println(workPath);
+		
 		
 		return "redirect:list";
 	}
